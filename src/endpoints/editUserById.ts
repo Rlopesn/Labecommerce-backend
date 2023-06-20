@@ -17,19 +17,11 @@ export const editUserById = (req: Request, res: Response): void => {
             res.status(400);
             throw new Error("The name must be at least three characters long.");
         }
-        if (
-            email &&
-            !email.match("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")
-        ) {
+        if (email && !email.match("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
             res.status(400);
             throw new Error("Incorrect email format. Try again.");
         }
-        if (
-            password &&
-            !password.match(
-                "^(?=.*[A-Z])(?=.*[!#@$%&])(?=.*[0-9])(?=.*[a-z]).{6,15}$"
-            )
-        ) {
+        if (password && !password.match("^(?=.*[A-Z])(?=.*[!#@$%&])(?=.*[0-9])(?=.*[a-z]).{6,15}$")) {
             res.status(400);
             throw new Error("Your password must be between 6 and 15 characters, with both uppercase and lowercase letters, and at least one number and one special character."
             );
