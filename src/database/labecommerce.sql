@@ -57,6 +57,7 @@ VALUES (
         'A melhor cadeira',
         'http://www.minhaloja.com/cadeira-gamer'
     );
+
 INSERT INTO
     users (
         id,
@@ -84,3 +85,55 @@ VALUES (
         'pass1243',
         'hoje-a-noite-agora'
     );
+
+SELECT * FROM users;
+
+SELECT * FROM products;
+
+SELECT * FROM products WHERE name LIKE '%ga%';
+
+INSERT INTO
+    users (
+        id,
+        name,
+        email,
+        password,
+        created_at
+    )
+VALUES (
+        'u004',
+        'Outrano',
+        'outrano@gmail.com',
+        'pass3412',
+        'outro-dia-agora'
+    );
+
+INSERT INTO
+    products (
+        id,
+        name,
+        price,
+        description,
+        image_url
+    )
+VALUES (
+        'prod006',
+        'webcam',
+        155.50,
+        'A melhor camera',
+        'http://www.minhaloja.com/webcam'
+    );
+
+DELETE FROM users
+WHERE id = 'u003';
+
+DELETE FROM products
+WHERE id = 'prod002';
+
+UPDATE products
+SET name = 'Fone gamer',
+price = 180.00,
+description = 'O melhor fone gamer',
+image_url = 'http://www.minhaloja.com/fone-gamer'
+WHERE id = 'prod003';
+
