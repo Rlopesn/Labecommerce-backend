@@ -6,8 +6,9 @@ CREATE TABLE
         name TEXT NOT NULL,
         email TEXT UNIQUE NOT NULL,
         password TEXT NOT NULL,
-        created_at TEXT NOT NULL
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
+
 
 CREATE TABLE
     products(
@@ -145,12 +146,12 @@ CREATE TABLE
         FOREIGN KEY (buyer) REFERENCES users(id)
     );
 
+
 SELECT * FROM purchases;
 
 INSERT INTO
     purchases (id, buyer, total_price)
-VALUES
-('p001', 'u002', 50), ('p002', 'u001', 60), ('p003', 'u004', 40);
+VALUES ('p001', 'u002', 50), ('p002', 'u001', 60), ('p003', 'u004', 40);
 
 UPDATE purchases SET total_price = 75 WHERE id = 'p001';
 
@@ -163,3 +164,33 @@ SELECT
     purchases.created_at
 FROM purchases
     JOIN users ON purchases.buyer = users.id;
+
+CREATE TABLE
+    purchases_products(
+        purchase_id TEXT NOT NULL,
+        product_id TEXT NOT NULL,
+        quantity INTEGER NOT NULL,
+        FOREIGN KEY (purchase_id) REFERENCES purchases(id),
+        FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE ON DELETE RESTRICT
+    );
+
+
+
+INSERT INTO
+    purchases_products(
+        purchase_id,
+        product_id,
+        quantity
+    )
+VALUES
+('p001', 'prod005', 2), ('p002', 'prod003', 5), ('p003', 'prod006', 1);
+
+
+SELECT * FROM products
+LEFT JOIN purchases_products ON products.id = purchases_products.product_id
+LEFT JOIN purchases ON purchases.id = purchases_products.purchase_id;
+
+
+UPDATE users
+SET name = '02'
+WHERE id = 'Julia';
