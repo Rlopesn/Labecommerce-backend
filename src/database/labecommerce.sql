@@ -124,16 +124,42 @@ VALUES (
         'http://www.minhaloja.com/webcam'
     );
 
-DELETE FROM users
-WHERE id = 'u003';
+DELETE FROM users WHERE id = 'u003';
 
-DELETE FROM products
-WHERE id = 'prod002';
+DELETE FROM products WHERE id = 'prod002';
 
 UPDATE products
-SET name = 'Fone gamer',
-price = 180.00,
-description = 'O melhor fone gamer',
-image_url = 'http://www.minhaloja.com/fone-gamer'
+SET
+    name = 'Fone gamer',
+    price = 180.00,
+    description = 'O melhor fone gamer',
+    image_url = 'http://www.minhaloja.com/fone-gamer'
 WHERE id = 'prod003';
 
+CREATE TABLE
+    purchases (
+        id TEXT PRIMARY KEY NOT NULL,
+        buyer TEXT NOT NULL,
+        total_price REAL NOT NULL,
+        created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (buyer) REFERENCES users(id)
+    );
+
+SELECT * FROM purchases;
+
+INSERT INTO
+    purchases (id, buyer, total_price)
+VALUES
+('p001', 'u002', 50), ('p002', 'u001', 60), ('p003', 'u004', 40);
+
+UPDATE purchases SET total_price = 75 WHERE id = 'p001';
+
+SELECT
+    users.id AS userId,
+    purchases.id AS orderId,
+    users.name,
+    users.email,
+    purchases.total_price,
+    purchases.created_at
+FROM purchases
+    JOIN users ON purchases.buyer = users.id;
