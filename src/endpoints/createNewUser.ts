@@ -1,8 +1,9 @@
 import { Request, Response } from "express"
 import { TUsers } from "../types/types"
 import { users } from "../database/database"
+import { db } from "../database/knex"
 
-export const createNewUser = (req: Request, res: Response): void => {
+export const createNewUser = async (req: Request, res: Response) => {
 
     try {
         const { id, name, email, password } = req.body
@@ -11,7 +12,7 @@ export const createNewUser = (req: Request, res: Response): void => {
             name,
             email,
             password,
-            createAt: new Date().toISOString()
+            createdAt: new Date().toISOString()
         }
         if (!id || !name || !email || !password) {
             res.status(400)
@@ -47,12 +48,16 @@ export const createNewUser = (req: Request, res: Response): void => {
             res.status(400)
             throw new Error("This Email is already in use, use another.")
         }
-        users.push(newUser)
+
+        const result = await db.raw(`INSERT INTO users (id, name, email, password)
+        VALUES("${id}","${name}","${email}","${password}")
+        `)
         res.status(201).send("New user successfully registered.")
+
     } catch (error) {
-        if(error instanceof Error){
+        if (error instanceof Error) {
             res.send(error.message)
-        }else {
+        } else {
             res.send("Unknown error.")
         }
     }

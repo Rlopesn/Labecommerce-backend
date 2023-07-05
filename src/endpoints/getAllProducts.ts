@@ -1,7 +1,8 @@
 import { Request, Response } from "express"
 import { products } from "../database/database"
+import { db } from "../database/knex"
 
-export const getAllProducts = (req: Request, res: Response): void => {
+export const getAllProducts = async (req: Request, res: Response) => {
     try {
         const name = req.query.name
         if (name !== undefined) {
@@ -18,7 +19,11 @@ export const getAllProducts = (req: Request, res: Response): void => {
             })
             res.status(200).send(response)
         }
-        res.status(200).send(products)
+  
+        const result = await db.raw(`
+            SELECT * FROM products;
+        `)
+        res.status(200).send(result)
     } catch (error) {
         if (error instanceof Error) {
             res.send(error.message)
