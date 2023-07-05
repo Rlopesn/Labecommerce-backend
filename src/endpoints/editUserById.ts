@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { users } from "../database/database"
 
-export const editUserById = (req: Request, res: Response): void => {
+export const editUserById = (req: Request, res: Response) => {
 
     try {
         const id = req.params.id;
@@ -34,6 +34,9 @@ export const editUserById = (req: Request, res: Response): void => {
         } else {
             res.status(400).send("User not found.");
         }
+         
+        
+
     } catch (error) {
         if (error instanceof Error) {
             res.send(error.message);

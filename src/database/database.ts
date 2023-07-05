@@ -6,14 +6,14 @@ export const users: TUsers[] = [
         name: "Fulano",
         email: "fulano@email.com",
         password: "Fulano123",
-        createAt: new Date().toISOString()
+        createdAt: new Date().toISOString()
     },
     {
         id: "u002",
         name: "Beltrano",
         email: "Beltrano@email.com",
         password: "Beltrano123",
-        createAt: new Date().toISOString()
+        createdAt: new Date().toISOString()
     }
 ]
 
