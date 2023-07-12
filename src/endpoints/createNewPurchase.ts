@@ -4,7 +4,7 @@ import { db } from "../database/knex";
 
 
 
-export const createPurchase = async (req: Request, res: Response) => {
+export const createNewPurchase = async (req: Request, res: Response) => {
     try {
         const { id, buyer, total_price } = req.body
         const newPurchase: TPurchases = {
@@ -32,12 +32,13 @@ export const createPurchase = async (req: Request, res: Response) => {
             res.status(400);
             throw new Error("The 'total_price' must be a number")
         }
-        const result = await db.raw(`
-        INSERT INTO purchases (id, buyer, total_price)
-        VALUES ("${id}","${buyer}","${total_price}")
-        `);
-        res.status(201).send("Purchases registration successfully completed!")
-
+        const purchasesWithId = await db("purchases").where("id", id).first();
+        if (purchasesWithId) {
+            res.status(400).send("This ID is already in use, use another.");
+            return;
+        }
+        await db("purchases").insert(newPurchase)
+        res.status(201).send("New purchase successfully registered.")
     } catch (error) {
         if (req.statusCode === 200) {
             res.status(500);

@@ -1,18 +1,17 @@
 import { Request, Response } from "express"
-import { products } from "../database/database"
+import { db } from "../database/knex";
 
-export const deleteProductById = (req: Request, res: Response): void => {
+export const deleteProductById = async (req: Request, res: Response) => {
 
     try {
-        const id = req.params.id;
-        const findProductsIdex = products.findIndex((product) => {
-            return product.id === id;
-        });
-        if (findProductsIdex >= 0) {
-            products.splice(findProductsIdex, 1);
-            res.status(200).send("Successfully deleted product.");
+        const idToDelete = req.params.id;
+        const [product] = await db("products").where({ id: idToDelete })
+        if (!product) {
+            res.status(404)
+            throw new Error("Id not found.")
         }
-        res.status(400).send("Product not found.");
+        await db("products").del().where({ id: idToDelete })
+        res.status(200).send("Product deleted successfully.")
     } catch (error) {
         if (error instanceof Error) {
             res.send(error.message);

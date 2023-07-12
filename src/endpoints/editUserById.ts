@@ -1,14 +1,12 @@
 import { Request, Response } from "express"
-import { users } from "../database/database"
+import { db } from "../database/knex";
 
-export const editUserById = (req: Request, res: Response) => {
+export const editUserById = async (req: Request, res: Response) => {
 
     try {
-        const id = req.params.id;
+        const idToEdit = req.params.id;
         const { name, email, password } = req.body;
-        const findUsers = users.find((user) => {
-            return user.id === id;
-        });
+
         if (name && typeof name !== "string") {
             res.status(422);
             throw new Error("The name must be a string.");
@@ -26,17 +24,19 @@ export const editUserById = (req: Request, res: Response) => {
             throw new Error("Your password must be between 6 and 15 characters, with both uppercase and lowercase letters, and at least one number and one special character."
             );
         }
-        if (findUsers) {
-            findUsers.name = name || findUsers.name;
-            findUsers.email = email || findUsers.email;
-            findUsers.password = password || findUsers.password;
-            res.status(200).send("User Changed Successfully.");
+        const [user] = await db("users").where({ id: idToEdit })
+        if (user) {
+            const updateUser = {
+                name: name || user.name,
+                email: email || user.email,
+                password: password || user.password
+            }
+            await db("users").update(updateUser).where({ id: idToEdit })
         } else {
-            res.status(400).send("User not found.");
+            res.status(404)
+            throw new Error("User not found.");
         }
-         
-        
-
+        res.status(200).send("User Changed Successfully.");
     } catch (error) {
         if (error instanceof Error) {
             res.send(error.message);

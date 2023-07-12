@@ -1,11 +1,12 @@
 import { Request, Response } from "express"
 import { TProducts } from "../types/types"
-import { products } from "../database/database"
 import { db } from "../database/knex"
 
 export const createNewProduct = async (req: Request, res: Response) => {
     try {
+
         const { id, name, price, description, imageUrl } = req.body
+
         const newProduct: TProducts = {
             id: id,
             name: name,
@@ -38,14 +39,12 @@ export const createNewProduct = async (req: Request, res: Response) => {
             res.status(422);
             throw new Error("The imageUrl must be a string");
         }
-        const checkId = products.find((product) => product.id === id)
-        if (checkId) {
-            res.status(400)
-            throw new Error("This ID is already in use, use another.")
+        const productWithId = await db("products").where("id", id).first();
+        if (productWithId) {
+            res.status(400).send("This ID is already in use, use another.");
+            return;
         }
-        const result = await db.raw(`INSERT INTO products (id, name, price, description, imageUrl)
-        VALUES ("${id}","${name}","${price}","${description}","${imageUrl}");
-        `)
+        await db("products").insert(newProduct)
         res.status(201).send("New product successfully registered.")
     } catch (error) {
         if (error instanceof Error) {

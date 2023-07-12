@@ -1,14 +1,11 @@
 import { Request, Response } from "express"
-import { products } from "../database/database"
+import { db } from "../database/knex";
 
-export const editProductById = (req: Request, res: Response): void => {
+export const editProductById = async (req: Request, res: Response) => {
 
     try {
-        const id = req.params.id;
+        const idToEdit = req.params.id;
         const { name, price, description, imageUrl } = req.body;
-        const findProducts = products.find((product) => {
-            return product.id === id;
-        });
 
         if (name && typeof name !== "string") {
             res.status(422);
@@ -30,15 +27,21 @@ export const editProductById = (req: Request, res: Response): void => {
             res.status(422);
             throw new Error("The imageUrl must be a string.");
         }
-        if (findProducts) {
-            findProducts.name = name || findProducts.name;
-            findProducts.price = price || findProducts.price;
-            findProducts.description = description || findProducts.description;
-            findProducts.imageUrl = imageUrl || findProducts.imageUrl;
-            res.status(200).send("Product changed successfully.");
+
+        const [product] = await db("products").where({ id: idToEdit })
+        if (product) {
+            const updateProduct = {
+                name: name || product.name,
+                price: price || product.price,
+                description: description || product.description,
+                imageUrl: imageUrl || product.imageUrl
+            }
+            await db("products").update(updateProduct).where({ id: idToEdit })
         } else {
-            res.status(400).send("product not found.");
+            res.status(404)
+            throw new Error("product not found.");
         }
+        res.status(200).send("Product changed successfully.");
     } catch (error) {
         if (error instanceof Error) {
             res.send(error.message);

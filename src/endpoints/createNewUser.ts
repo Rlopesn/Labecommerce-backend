@@ -1,6 +1,5 @@
 import { Request, Response } from "express"
 import { TUsers } from "../types/types"
-import { users } from "../database/database"
 import { db } from "../database/knex"
 
 export const createNewUser = async (req: Request, res: Response) => {
@@ -27,6 +26,14 @@ export const createNewUser = async (req: Request, res: Response) => {
             res.status(422)
             throw new Error("Invalid information, ID must be a valid string. Try again.")
         }
+        if (name && typeof name !== "string") {
+            res.status(422);
+            throw new Error("The name must be a string");
+        }
+        if (name && name.length < 3) {
+            res.status(400);
+            throw new Error("The name must be at least three characters long");
+        }
         if (typeof (email) === "string") {
             if (!email.match("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$")) {
                 res.status(422)
@@ -36,22 +43,21 @@ export const createNewUser = async (req: Request, res: Response) => {
             res.status(422)
             throw new Error("Invalid information type, email must be a string. Try again.")
         }
-
-        const checkId = users.find((user) => user.id === id)
-        const checkEmail = users.find((user) => user.email === email)
-
-        if (checkId) {
-            res.status(400)
-            throw new Error("This ID is already in use, use another.")
+        if (password && !password.match("^(?=.*[A-Z])(?=.*[!#@$%&])(?=.*[0-9])(?=.*[a-z]).{6,15}$")) {
+            res.status(400);
+            throw new Error("Your password must be between 6 and 15 characters, with both uppercase and lowercase letters, and at least one number and one special character.");
         }
-        if (checkEmail) {
-            res.status(400)
-            throw new Error("This Email is already in use, use another.")
+        const userWithId = await db("users").where("id", id).first();
+        const userWithEmail = await db("users").where("email", email).first();
+        if (userWithId) {
+            res.status(400).send("This ID is already in use, use another.");
+            return;
         }
-
-        const result = await db.raw(`INSERT INTO users (id, name, email, password)
-        VALUES("${id}","${name}","${email}","${password}")
-        `)
+        if (userWithEmail) {
+            res.status(400).send("This Email is already in use, use another.");
+            return;
+        }
+        await db("users").insert(newUser)
         res.status(201).send("New user successfully registered.")
 
     } catch (error) {
