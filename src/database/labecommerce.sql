@@ -1,4 +1,4 @@
--- Active: 1687300051540@@127.0.0.1@3306
+-- Active: 1689200705156@@127.0.0.1@3306
 
 CREATE TABLE
     users (
@@ -68,9 +68,17 @@ CREATE TABLE
         purchase_id TEXT NOT NULL,
         product_id TEXT NOT NULL,
         quantity INTEGER NOT NULL,
-        FOREIGN KEY (purchase_id) REFERENCES purchases(id),
-        FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE ON DELETE RESTRICT
+        FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON UPDATE CASCADE ON DELETE CASCADE,
+        FOREIGN KEY (product_id) REFERENCES products(id) ON UPDATE CASCADE ON DELETE CASCADE
     );
+
+INSERT INTO
+    purchases_products (
+        purchase_id,
+        product_id,
+        quantity
+    )
+VALUES ('pur001', 'prod001', 4), ('pur001', 'prod002', 2);
 
 SELECT * FROM purchases_products;
 
@@ -82,3 +90,85 @@ FROM products
     LEFT JOIN purchases ON purchases.id = purchases_products.purchase_id;
 
 UPDATE users SET name = '02' WHERE id = 'Rafael';
+
+INSERT INTO
+    users (id, name, email, password)
+VALUES (
+        'c001',
+        'Fulana',
+        'fulana@email.com',
+        '123456'
+    ), (
+        'c002',
+        'Fulano',
+        'fulano@email.com',
+        '123456'
+    ), (
+        'c003',
+        'Sicrana',
+        'sicrana@email.com',
+        '123456'
+    ), (
+        'c004',
+        'Fayra',
+        'fayra@email.com',
+        '123456'
+    );
+
+INSERT INTO
+    products (
+        id,
+        name,
+        price,
+        description,
+        imageUrl
+    )
+VALUES (
+        'p001',
+        'mouse',
+        100,
+        'esrdxfcghvbj',
+        'image'
+    ), (
+        'p002',
+        'teclado',
+        300,
+        'dsfcgjkn',
+        'image'
+    ), (
+        'p003',
+        'PC',
+        400,
+        'fdcghvbjn',
+        'image'
+    ), (
+        'p004',
+        'mouse gamer',
+        700,
+        'esrdxfcghvbj',
+        'image'
+    ), (
+        'p005',
+        'teclado gamer',
+        900,
+        'dsfcgjkn',
+        'image'
+    ), (
+        'p006',
+        'PC gamer',
+        1000,
+        'fdcghvbjn',
+        'image'
+    );
+
+INSERT INTO
+    purchases(id, buyer, total_price)
+VALUES ('pur001', 'u001', 300), ('pur002', 'u002', 400), ('pur003', 'u003', 500);
+
+INSERT INTO
+    purchases_products(
+        purchase_id,
+        product_id,
+        quantity
+    )
+VALUES ('P001', 'p001', 2), ('P002', 'p002', 3), ('P003', 'p003', 4);

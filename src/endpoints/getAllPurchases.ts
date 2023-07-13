@@ -1,9 +1,9 @@
 import { Request, Response } from "express"
 import { db } from "../database/knex"
 
-export const getAllUsers = async (req: Request, res: Response) => {
+export const getAllPurchases = async (req: Request, res: Response) => {
     try {
-        const result = await db("users")
+        const result = await db("purchases")
         res.status(200).send(result)
     } catch (error) {
         if (error instanceof Error) {

@@ -8,10 +8,10 @@ import { deleteUserById } from './endpoints/deleteUserById';
 import { deleteProductById } from './endpoints/deleteProductById';
 import { editUserById } from './endpoints/editUserById';
 import { editProductById } from './endpoints/editProductById';
-import { createPurchase } from './endpoints/createPurchase';
+import { createNewPurchase } from './endpoints/createNewPurchase';
 import { getPurchaseById } from './endpoints/getPurchaseById';
-import { getProductById } from './endpoints/getProductById';
-
+import { deletePurchaseById } from './endpoints/deletePurchaseById';
+import { getAllPurchases } from './endpoints/getAllPurchases';
 
 const app = express()
 app.use(express.json())
@@ -42,20 +42,25 @@ app.get("/users", getAllUsers);
 
 app.get("/products", getAllProducts);
 
-app.get("/purchases/:id", getPurchaseById)
+app.get("/purchases", getAllPurchases);
 
-app.get("/products/:id", getProductById)
+app.get("/purchases/:id", getPurchaseById);
 
 app.post("/users", createNewUser);
 
 app.post("/products", createNewProduct);
 
-app.post("/purchases", createPurchase);
+app.post("/purchases", createNewPurchase);
 
 app.delete("/users/:id", deleteUserById);
 
 app.delete("/products/:id", deleteProductById);
 
+app.delete("/purchases/:id", deletePurchaseById);
+
 app.put("/users/:id", editUserById);
 
 app.put("/products/:id", editProductById);
+
+
+

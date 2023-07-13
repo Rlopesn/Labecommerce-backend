@@ -19,6 +19,5 @@ export type TProducts = {
 export type TPurchases = {
     id: string,
     buyer: string,
-    total_price: number,
-    createdAt: string
+    total_price: number
 }
