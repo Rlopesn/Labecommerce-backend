@@ -150,6 +150,6 @@ deverá aparecer a confirmação: **Servidor rodando na porta 3003**
 
 ### Rafael Lopes Nogueira
 
-<a style="font-size: 20px" href="https://www.linkedin.com/in/rafaellopesn/"> Meu linkedin</a>
+<a style="font-size: 21px" href="https://www.linkedin.com/in/rafaellopesn/"> Meu linkedin</a>
 
 <a style="font-size: 20px" href="https://www.instagram.com/rlopesn_/"> Meu Instagram</a>
