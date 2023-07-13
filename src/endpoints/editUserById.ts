@@ -6,7 +6,6 @@ export const editUserById = async (req: Request, res: Response) => {
     try {
         const idToEdit = req.params.id;
         const { name, email, password } = req.body;
-
         if (name && typeof name !== "string") {
             res.status(422);
             throw new Error("The name must be a string.");

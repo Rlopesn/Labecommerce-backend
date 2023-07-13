@@ -6,7 +6,6 @@ export const editProductById = async (req: Request, res: Response) => {
     try {
         const idToEdit = req.params.id;
         const { name, price, description, imageUrl } = req.body;
-
         if (name && typeof name !== "string") {
             res.status(422);
             throw new Error("The name must be a string.");
@@ -27,7 +26,6 @@ export const editProductById = async (req: Request, res: Response) => {
             res.status(422);
             throw new Error("The imageUrl must be a string.");
         }
-
         const [product] = await db("products").where({ id: idToEdit })
         if (product) {
             const updateProduct = {

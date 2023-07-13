@@ -12,10 +12,6 @@ import { createNewPurchase } from './endpoints/createNewPurchase';
 import { getPurchaseById } from './endpoints/getPurchaseById';
 import { deletePurchaseById } from './endpoints/deletePurchaseById';
 import { getAllPurchases } from './endpoints/getAllPurchases';
-import { request } from 'http';
-import { db } from './database/knex';
-
-
 
 const app = express()
 app.use(express.json())
@@ -46,18 +42,7 @@ app.get("/users", getAllUsers);
 
 app.get("/products", getAllProducts);
 
-app.get("/purchases", async (req: Request, res: Response) =>{
-    try {
-        const result = await db("purchases")
-        res.status(200).send(result)
-    } catch (error) {
-        if (error instanceof Error) {
-            res.send(error.message)
-        } else {
-            res.status(500).send("Unknown error.")
-        }
-    }
-});
+app.get("/purchases", getAllPurchases);
 
 app.get("/purchases/:id", getPurchaseById);
 

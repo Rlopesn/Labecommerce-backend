@@ -4,7 +4,6 @@ import { db } from "../database/knex"
 export const getAllProducts = async (req: Request, res: Response) => {
     try {
         const name = req.query.name
-
         if (name !== undefined) {
             if (typeof name !== "string") {
                 res.status(422)
